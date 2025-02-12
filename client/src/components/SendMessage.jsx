@@ -51,6 +51,9 @@ const SendMessage = ({ onClose }) => {
         // Hide success message after 2 seconds
         setTimeout(() => {
           setShowSuccessMessage(false);
+
+          // Reload the page after message is sent
+          window.location.reload();  // Refresh the page
         }, 2000);
       } else {
         // Handle failure in sending message

@@ -6,6 +6,8 @@ import { FaCaretDown, FaUserFriends } from "react-icons/fa";
 import { IoMdMore, IoMdRefresh } from "react-icons/io";
 import { GoTag } from "react-icons/go";
 import Emails from "./Emails";
+import axios from 'axios'; 
+
 
 const mailType = [
     { icon: <MdInbox />, text: "Primary" },

@@ -13,7 +13,7 @@ router.get('/inbox/:userEmail', authMiddleware, viewEmailSending);
 
 router.put('/mark-read/:emailId',authMiddleware, markEmailAsRead );
 
-router.delete('/delete-email/:emailId', authMiddleware, deleteEmail);
+router.delete('/messages/:emailId', authMiddleware, deleteEmail);
 
 router.get('/search',authMiddleware,searchEmails)
 

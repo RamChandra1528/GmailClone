@@ -2,7 +2,7 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 import { Layout } from './Layout';
 import LandingPage from './LandingPage';
 import Inbox from './components/Inbox';
-import Mail from './components/Mail';
+import Mail from './components/OpenMail';
 import Login from './Authentication/Login';
 import Signup from './Authentication/Signup';
 import PrivateRoute from './Context/PrivateRoute';
@@ -17,9 +17,9 @@ const router = createBrowserRouter(
 
       {/* Protect `/app` with PrivateRoute */}
       <Route path="/app" element={<PrivateRoute />}>
-        <Route path="" element={<Layout />}>
+        <Route element={<Layout />}> {/* Layout wraps the private routes */}
           <Route index element={<Inbox />} />
-          <Route path="/app/mail/:id" element={<Mail />} />
+          <Route path="mail/:id" element={<Mail />} /> {/* No need for `/app/mail/:id` */}
         </Route>
       </Route>
     </>

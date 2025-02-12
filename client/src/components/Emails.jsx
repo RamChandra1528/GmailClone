@@ -17,11 +17,11 @@ function Emails() {
       }
     };
     fetchEmails();
-  }, []); // Only fetch emails once when component is mounted
+  }, []); // Fetch emails once when the component mounts
 
   const formatTimestamp = (timestamp) => {
-    const date = new Date(timestamp); // Convert string to Date object
-    return date.toLocaleString(); // Format the date to a readable string
+    const date = new Date(timestamp);
+    return date.toLocaleString(); // Format the timestamp into a readable string
   };
 
   return (
@@ -33,9 +33,9 @@ function Emails() {
           <Email
             key={email._id}
             id={email._id}
-            title={email.subject}
-            description={email.content}
-            timestamp={formatTimestamp(email.timestamp)} // Use the formatted timestamp
+            title={email.subject} // Pass subject as the title
+            description={email.message} // Pass message as the description
+            timestamp={formatTimestamp(email.createdAt)} // Use the formatted timestamp (createdAt)
           />
         ))
       )}

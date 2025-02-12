@@ -40,6 +40,28 @@ app.get('/api/auth/users/me', authMiddleware, async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+const Email = require('./models/email.model')
+app.get('/api/email/messages/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Query the database to find the email by its ID
+    const email = await Email.findById(id);
+
+    // Check if the email exists
+    if (!email) {
+      return res.status(404).json({ message: "Email not found" });
+    }
+
+    // Send the found email data as the response
+    res.json(email);
+  } catch (err) {
+    console.error("Error fetching email:", err);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
 // Global Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

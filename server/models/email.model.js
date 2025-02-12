@@ -8,13 +8,8 @@ const EmailSchema = new mongoose.Schema(
         message: { type: String, required: true },
         read: { type: Boolean, default: false },
     },
-    { timestamps: true } // This ensures createdAt and updatedAt fields are added automatically
-);
+    { timestamps: true } );
+
+EmailSchema.index({ subject: 'text', message: 'text', from: 'text' });
 
 module.exports = mongoose.model('Email', EmailSchema);
-
-
-// emailSchema.index({ subject: 'text', message: 'text', from: 'text' });
-
-// const Email = mongoose.model('Email', emailSchema);
-// module.exports = Email;

@@ -1,31 +1,62 @@
 /* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
 import { MdDeleteOutline, MdOutlineMarkEmailUnread, MdOutlineReport, MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { BiArchiveIn } from "react-icons/bi";
+import axios from "axios";
 
-// Sample Email Data
-const emails = [
-  {
-    _id: "67a59fa1aa075dd47b58017d",
-    from: "iitjee451@@gmail.com",
-    to: "limbaramchandra2002@gmail.com",
-    subject: "Test Email",
-    message: "Hello, this is a test email from our Gmail clone!",
-    timestamp: "2025-02-07T05:52:33.129+00:00",
-  }
-];
-
-const Mail = () => {
+const OpenMail = () => {
   const { id } = useParams(); // Get email ID from URL
+  const [email, setEmail] = useState(null); // State to store the email data
   const navigate = useNavigate();
 
-  // Find the selected email based on the ID from URL
-  const email = emails.find((mail) => mail._id === id);
+  // Fetch email data based on the ID
+  useEffect(() => {
+    const fetchEmail = async () => {
+      try {
+        const res = await axios.get(`http://localhost:3000/api/email/messages/${id}`);
+        setEmail(res.data);
+      } catch (err) {
+        console.error("Error fetching email:", err);
+      }
+    };
+
+    fetchEmail();
+  }, [id]); // Fetch email when the component mounts or ID changes
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this email?");
+    if (!confirmDelete) return;
+  
+    try {
+      // Get the JWT token from localStorage or wherever it's stored
+      const token = localStorage.getItem("token"); // Assuming token is stored in localStorage
+  
+      if (!token) {
+        alert("You must be logged in to delete emails.");
+        return;
+      }
+  
+      // Send request to delete the email from the database
+      await axios.delete(`http://localhost:3000/api/email/messages/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}` // Pass the token in the Authorization header
+        }
+      });
+  
+      // Redirect back to the inbox or any other route
+      navigate("/app"); // You can change this to the route where you want to go after deletion
+  
+    } catch (err) {
+      console.error("Error deleting email:", err);
+      alert("Failed to delete email.");
+    }
+  };
+  
 
   if (!email) {
-    return <div className="text-center mt-10 text-red-500">Email not found</div>;
+    return <div className="text-center mt-10 text-red-500">Loading...</div>;
   }
 
   return (
@@ -42,7 +73,8 @@ const Mail = () => {
           <div className="p-2 rounded-full hover:bg-gray-200 cursor-pointer">
             <MdOutlineReport size={"22px"} />
           </div>
-          <div className="p-2 rounded-full hover:bg-gray-200 cursor-pointer">
+          {/* Delete Button */}
+          <div className="p-2 rounded-full hover:bg-gray-200 cursor-pointer" onClick={handleDelete}>
             <MdDeleteOutline size={"22px"} />
           </div>
           <div className="p-2 rounded-full hover:bg-gray-200 cursor-pointer">
@@ -65,7 +97,7 @@ const Mail = () => {
             <span className="text-sm bg-gray-200 rounded-md px-2">Inbox</span>
           </div>
           <div className="flex-none text-gray-400 my-5 text-sm">
-            <p>{new Date(email.timestamp).toLocaleString()}</p>
+            <p>{new Date(email.createdAt).toLocaleString()}</p>
           </div>
         </div>
 
@@ -78,4 +110,4 @@ const Mail = () => {
   );
 };
 
-export default Mail;
+export default OpenMail;

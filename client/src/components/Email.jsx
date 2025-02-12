@@ -8,8 +8,11 @@ import { useNavigate } from "react-router-dom";
 export const Email = ({ id, title, description, timestamp }) => {
   const navigate = useNavigate();
 
-  const openMail = () => navigate(`/app/mail/${id}`); // Navigate with email ID
-
+  const openMail = () => {
+    console.log("Email Clicked:", id);
+    navigate(`/app/mail/${id}`);
+  };
+  
   const handleKeyDown = (event) => {
     if (event.key === "Enter" || event.key === " ") {
       openMail();
