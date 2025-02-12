@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { LuPencil } from "react-icons/lu";
 import { MdInbox, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { FaStar, FaPaperPlane, FaTrash } from "react-icons/fa";
-import NewMessage from "./NewMessage"; // Import the component
+import SendMessage from "./SendMessage"; // Import the component
 
 const sidebarItems = [
   { icon: MdInbox, label: "Inbox", path: "/inbox" },
@@ -16,7 +17,7 @@ export default function Sidebar() {
   const [showMessage, setShowMessage] = useState(false); // State to show/hide
 
   return (
-    <div className="w-1/5 min-w-[145px] bg-white shadow-md">
+    <div className="w-1/5 min-w-[145px] ">
       {/* Compose Button */}
       <div className="p-3">
         <button
@@ -42,7 +43,7 @@ export default function Sidebar() {
       </div>
 
       {/* New Message Form (Only Show If State is True) */}
-      {showMessage && <NewMessage onClose={() => setShowMessage(false)} />}
+      {showMessage && <SendMessage onClose={() => setShowMessage(false)} />}
     </div>
   );
 }
