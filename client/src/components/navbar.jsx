@@ -6,19 +6,32 @@ import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 import { FaSearch } from "react-icons/fa";
 import { BiPlus } from "react-icons/bi";
 import { MdApps } from "react-icons/md";
+import Cookies from 'js-cookie';  // Import js-cookie
 
 function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
-  const [searchQuery, setSearchQuery] = useState(''); 
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedName = localStorage.getItem('userName') || 'Guest User';
-    const storedEmail = localStorage.getItem('userEmail') || 'guest@example.com';
-    setUserName(storedName);
-    setUserEmail(storedEmail);
+    const token = Cookies.get("userToken");
+
+    if (token) {
+      try {
+        // Decode token and set user details from cookie
+        setUserName(Cookies.get("userName") || 'Guest User');
+        setUserEmail(Cookies.get("userEmail") || 'guest@example.com');
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    } else {
+      const storedName = Cookies.get('userName') || 'Guest User';
+      const storedEmail = Cookies.get('userEmail') || 'guest@example.com';
+      setUserName(storedName);
+      setUserEmail(storedEmail);
+    }
   }, []);
 
   const toggleDropdown = () => {
@@ -28,15 +41,17 @@ function Navbar() {
   const handleSignOut = () => {
     try {
       console.log("Signing out...");
-      const token = localStorage.getItem("userToken");
-  
+      const token = Cookies.get("userToken");
+
       if (!token) {
-        console.warn("No token found in localStorage!");
+        console.warn("No token found in cookies!");
       } else {
-        localStorage.removeItem("userToken");
-        console.log("Token removed successfully.");
+        Cookies.remove("userToken");
+        Cookies.remove("userName");
+        Cookies.remove("userEmail");
+        console.log("Token and user info removed successfully.");
       }
-  
+
       navigate("/login");
     } catch (error) {
       console.error("Error during sign-out:", error);
